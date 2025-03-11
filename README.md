@@ -40,6 +40,10 @@ Run the script with:
 chmod +x auto_scanning.sh
 ./auto_scanning.sh
 ```
+
+or
+
+Read this to automated instalation [INSTALL.md[(https://github.com/armanridho/PD_autopilot/INSTALL.md)
 ## 📂 Output Files
 
 Results will be saved in the scan_results directory:
