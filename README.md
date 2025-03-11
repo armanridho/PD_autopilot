@@ -18,18 +18,16 @@ This script automates the process of enumerating subdomains, checking active hos
 
 Ensure you install them from official ProjectDiscovery repo:
 
-[Subfinder](https://github.com/projectdiscovery/subfinder)
+- [Subfinder](https://github.com/projectdiscovery/subfinder)
+- [Httpx](https://github.com/projectdiscovery/httpx)
+- [Naabu](https://github.com/projectdiscovery/naabu)
+- [Nuclei](https://github.com/projectdiscovery/nuclei)
+- [Katana](https://github.com/projectdiscovery/katana)
+- [Notify](https://github.com/projectdiscovery/notify) (optional)
 
-[Httpx](https://github.com/projectdiscovery/httpx)
+OR
 
-[Naabu](https://github.com/projectdiscovery/naabu)
-
-[Nuclei](https://github.com/projectdiscovery/nuclei)
-
-[Katana](https://github.com/projectdiscovery/katana)
-
-[Notify](https://github.com/projectdiscovery/notify) (optional)
-
+Read this for automatic installation [INSTALL.md](https://github.com/armanridho/PD_autopilot/blob/main/INSTALL.md)
 
 ## 🚀 Usage
 
@@ -40,10 +38,6 @@ Run the script with:
 chmod +x auto_scanning.sh
 ./auto_scanning.sh
 ```
-
-or
-
-Read this to automated instalation [INSTALL.md](https://github.com/armanridho/PD_autopilot/blob/main/INSTALL.md)
 
 ## 📂 Output Files
 
