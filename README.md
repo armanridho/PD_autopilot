@@ -16,7 +16,7 @@ This script automates the process of enumerating subdomains, checking active hos
 
 ## 🛠️ Installation & Requirements
 
-Ensure you install them from official DiscoveryProject repo:
+Ensure you install them from official ProjectDiscovery repo:
 
 [Subfinder](https://github.com/projectdiscovery/subfinder)
 
@@ -32,6 +32,8 @@ Ensure you install them from official DiscoveryProject repo:
 
 
 ## 🚀 Usage
+
+Copy / Download / Clone this repo
 
 Run the script with:
 ```
