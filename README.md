@@ -34,6 +34,7 @@ Read this for automatic installation [INSTALL.md](https://github.com/armanridho/
 Copy / Download / Clone this repo
 
 Run the script with:
+- Change inside auto_scanning.sh (yourdomain.com) to domain what you need to scan, then
 ```
 chmod +x auto_scanning.sh
 ./auto_scanning.sh
