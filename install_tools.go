@@ -10,7 +10,7 @@ import (
 func installTool(tool string, repo string) {
 	fmt.Printf("[*] Installing %s...\n", tool)
 	cmd := exec.Command("go", "install", repo)
-	cmd.Env = append(os.Environ(), "GOBIN=/usr/local/bin")
+	cmd.Env = append(os.Environ(), "GOBIN="+os.Getenv("HOME")+"/go/bin")
 	err := cmd.Run()
 	if err != nil {
 		fmt.Printf("[!] Failed to install %s: %v\n", tool, err)
