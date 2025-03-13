@@ -45,22 +45,48 @@ fi
 httpx -l "$OUTPUT_DIR/clean_subdomains.txt" -o "$OUTPUT_DIR/live_subdomains.txt" -timeout $TIMEOUT -threads $THREADS
 echo "[✔] Active subdomains check completed." | tee -a "$SUMMARY_FILE"
 
-# 3️⃣ Port Scanning
+# 3️⃣ Resolving Active Subdomains to Unique IPs
+echo "[*] Resolving hostnames to IPs..."
+
+IP_FILE="$OUTPUT_DIR/live_ips.txt"
+TEMP_FILE="$OUTPUT_DIR/temp_ips.txt"
+> "$TEMP_FILE"
+
+while read -r domain; do
+    ip=$(dig +short "$domain" | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -n1)
+    
+    if [[ -n "$ip" ]]; then
+        echo "$ip" >> "$TEMP_FILE"
+        echo "[✔] $domain -> $ip"
+    else
+        echo "[!] Gagal mendapatkan IP untuk: $domain"
+    fi
+done < "$OUTPUT_DIR/live_subdomains.txt"
+
+sort -u "$TEMP_FILE" > "$IP_FILE"
+rm "$TEMP_FILE"
+
+if [ ! -s "$IP_FILE" ]; then
+    echo "[!] No IPs resolved. Exiting..."
+    exit 1
+fi
+
+# 4️⃣ Port Scanning
 echo "[*] Running port scanning using Naabu..."
 if ! command -v naabu &> /dev/null; then
     echo "[!] Naabu not found! Install it first."
     exit 1
 fi
 
-naabu -list "$OUTPUT_DIR/live_subdomains.txt" -o "$OUTPUT_DIR/ports.txt" -p "$PORT_RANGE" -rate "$SCAN_RATE"
+naabu -list "$IP_FILE" -o "$OUTPUT_DIR/ports.txt" -p "$PORT_RANGE" -rate "$SCAN_RATE"
 echo "[✔] Port scanning completed." | tee -a "$SUMMARY_FILE"
 
-# 4️⃣ Technology Detection
+# 5️⃣ Technology Detection
 echo "[*] Running technology detection using httpx..."
 httpx -l "$OUTPUT_DIR/live_subdomains.txt" -tech-detect -o "$OUTPUT_DIR/httpx_tech.txt"
 echo "[✔] Technology detection completed." | tee -a "$SUMMARY_FILE"
 
-# 5️⃣ Vulnerability Scanning
+# 6️⃣ Vulnerability Scanning
 echo "[*] Running vulnerability scanning using Nuclei..."
 if ! command -v nuclei &> /dev/null; then
     echo "[!] Nuclei not found! Install it first."
@@ -70,7 +96,7 @@ fi
 nuclei -l "$OUTPUT_DIR/live_subdomains.txt" -t ~/nuclei-templates/ -o "$OUTPUT_DIR/nuclei_results.txt"
 echo "[✔] Vulnerability scanning completed." | tee -a "$SUMMARY_FILE"
 
-# 6️⃣ Parameter & Endpoint Discovery
+# 7️⃣ Parameter & Endpoint Discovery
 echo "[*] Running endpoint discovery using Katana..."
 if ! command -v katana &> /dev/null; then
     echo "[!] Katana not found! Install it first."
@@ -80,7 +106,7 @@ fi
 katana --list "$OUTPUT_DIR/live_subdomains.txt" -d 5 -jc -o "$OUTPUT_DIR/katana_results.txt" -ef js,css,png,jpg,gif,svg
 echo "[✔] Endpoint discovery completed." | tee -a "$SUMMARY_FILE"
 
-# 7️⃣ Summarizing Results
+# 8️⃣ Summarizing Results
 echo "---------------------------------------------" >> "$SUMMARY_FILE"
 echo "Scan completed at: $(date)" >> "$SUMMARY_FILE"
 echo "Summary of findings:" >> "$SUMMARY_FILE"
@@ -88,6 +114,7 @@ echo "---------------------------------------------" >> "$SUMMARY_FILE"
 
 echo "🔹 Total subdomains found: $(wc -l < "$OUTPUT_DIR/clean_subdomains.txt")" >> "$SUMMARY_FILE"
 echo "🔹 Active subdomains: $(wc -l < "$OUTPUT_DIR/live_subdomains.txt")" >> "$SUMMARY_FILE"
+echo "🔹 Unique IPs resolved: $(wc -l < "$IP_FILE")" >> "$SUMMARY_FILE"
 echo "🔹 Open ports detected: $(wc -l < "$OUTPUT_DIR/ports.txt")" >> "$SUMMARY_FILE"
 echo "🔹 Technologies detected: $(wc -l < "$OUTPUT_DIR/httpx_tech.txt")" >> "$SUMMARY_FILE"
 echo "🔹 Vulnerabilities found: $(wc -l < "$OUTPUT_DIR/nuclei_results.txt")" >> "$SUMMARY_FILE"
