@@ -2,7 +2,7 @@
 # Automated Recon Script
 
 # Target domain
-DOMAIN="unsada.ac.id"
+DOMAIN="yourdomain.com"
 PORT_RANGE="1-65535"
 SCAN_RATE="10000"
 THREADS=30
