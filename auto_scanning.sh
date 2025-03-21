@@ -2,7 +2,7 @@
 # Automated Recon Script
 
 # Target domain
-DOMAIN="yourdomain.com"
+DOMAIN="unsada.ac.id"
 PORT_RANGE="1-65535"
 SCAN_RATE="10000"
 THREADS=30
@@ -94,21 +94,20 @@ else
 fi
 
 # 4️⃣ Port Scanning
-echo "[*] Running port scanning using Naabu..."
+echo "[*] Running port scanning using RustScan..."
 PORT_FILE="$OUTPUT_DIR/ports.txt"
 
 if [ ! -s "$PORT_FILE" ]; then
-    if ! command -v naabu &> /dev/null; then
-        echo "[!] Naabu not found! Install it first."
+    if ! command -v rustscan &> /dev/null; then
+        echo "[!] RustScan not found! Install it first."
         exit 1
     fi
 
-    naabu -list "$IP_FILE" -o "$PORT_FILE" -p "$PORT_RANGE" -rate "$SCAN_RATE"
+    sudo rustscan "$DOMAIN" --ulimit 10000 -b 2500 -t 5000 -- -sC -sV -oN "$OUTPUT_DIR/rustscan_results.txt"
     echo "[✔] Port scanning completed." | tee -a "$SUMMARY_FILE"
 else
     echo "[✔] Port scanning already exists. Skipping..."
 fi
-
 # 5️⃣ Technology Detection
 echo "[*] Running technology detection using httpx..."
 TECH_FILE="$OUTPUT_DIR/httpx_tech.txt"
