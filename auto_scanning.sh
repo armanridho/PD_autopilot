@@ -14,7 +14,7 @@ mkdir -p "$OUTPUT_DIR"
 
 SUMMARY_FILE="$OUTPUT_DIR/scan_summary.txt"
 
-# Buat atau tambahkan ringkasan jika file belum ada
+# Create or add summary if file does not exist
 if [ ! -f "$SUMMARY_FILE" ]; then
     echo "[*] Scan Summary Report" > "$SUMMARY_FILE"
     echo "Target: $DOMAIN" >> "$SUMMARY_FILE"
@@ -64,7 +64,7 @@ fi
 # 3️⃣ Resolving Active Subdomains to Unique IPs
 echo "[*] Resolving hostnames to IPs..."
 IP_FILE="$OUTPUT_DIR/live_ips.txt"
-SUBDOMAIN_FILE="$OUTPUT_DIR/clean_subdomains.txt"  # Menggunakan file clean_subdomains.txt
+SUBDOMAIN_FILE="$OUTPUT_DIR/clean_subdomains.txt"  # Using the clean_subdomains.txt file
 
 if [ ! -s "$IP_FILE" ]; then
     TEMP_FILE="$OUTPUT_DIR/temp_ips.txt"
@@ -94,20 +94,31 @@ else
 fi
 
 # 4️⃣ Port Scanning
-echo "[*] Running port scanning using Naabu..."
-PORT_FILE="$OUTPUT_DIR/ports.txt"
+echo "[*] Running port scanning using RustScan..."
 
-if [ ! -s "$PORT_FILE" ]; then
-    if ! command -v naabu &> /dev/null; then
-        echo "[!] Naabu not found! Install it first."
-        exit 1
+# Path for nmap results
+NMAP_DIR="$OUTPUT_DIR/nmap"
+mkdir -p "$NMAP_DIR"
+
+if ! command -v rustscan &> /dev/null; then
+    echo "[!] RustScan not found! Install it first."
+    exit 1
+fi
+
+while read -r ip; do
+    PORT_RESULT="$NMAP_DIR/ports_$ip.txt"
+    
+    if [ -s "$PORT_RESULT" ]; then
+        echo "[✔] Scan for $ip exists. Skipping..." | tee -a "$SUMMARY_FILE"
+        continue
     fi
 
-    naabu -list "$IP_FILE" -o "$PORT_FILE" -p "$PORT_RANGE" -rate "$SCAN_RATE"
-    echo "[✔] Port scanning completed." | tee -a "$SUMMARY_FILE"
-else
-    echo "[✔] Port scanning already exists. Skipping..."
-fi
+    echo "[*] Scanning $ip..." | tee -a "$SUMMARY_FILE"
+    sudo rustscan -a "$ip" --ulimit 100000 --batch-size 5000 -- -sS -sV -sC -oN "$PORT_RESULT"
+    echo "[✔] Scan for $ip done!" | tee -a "$SUMMARY_FILE"
+done < "$IP_FILE"
+
+echo "[✔] Port scanning completed." | tee -a "$SUMMARY_FILE"
 
 # 5️⃣ Technology Detection
 echo "[*] Running technology detection using httpx..."
@@ -161,7 +172,8 @@ echo "---------------------------------------------" >> "$SUMMARY_FILE"
 echo "🔹 Total subdomains found: $(wc -l < "$SUBDOMAIN_FILE")" >> "$SUMMARY_FILE"
 echo "🔹 Active subdomains: $(wc -l < "$LIVE_SUBDOMAIN_FILE")" >> "$SUMMARY_FILE"
 echo "🔹 Unique IPs resolved: $(wc -l < "$IP_FILE")" >> "$SUMMARY_FILE"
-echo "🔹 Open ports detected: $(wc -l < "$PORT_FILE")" >> "$SUMMARY_FILE"
+TOTAL_PORTS=$(grep -hEi "open" "$OUTPUT_DIR"/ports_*.txt 2>/dev/null | wc -l)
+echo "🔹 Open ports detected: $TOTAL_PORTS" >> "$SUMMARY_FILE"
 echo "🔹 Technologies detected: $(wc -l < "$TECH_FILE")" >> "$SUMMARY_FILE"
 echo "🔹 Vulnerabilities found: $(wc -l < "$NUCLEI_FILE")" >> "$SUMMARY_FILE"
 echo "🔹 Hidden endpoints discovered: $(wc -l < "$KATANA_FILE")" >> "$SUMMARY_FILE"
