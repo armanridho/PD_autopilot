@@ -1,69 +1,81 @@
-## 🔎 Automated Security Scanning Script
+<p align="center">
+  <img src="https://img.shields.io/github/stars/armanridho/PD_autopilot?style=social" alt="stars">
+  <img src="https://img.shields.io/github/license/armanridho/PD_autopilot" alt="license">
+  <img src="https://img.shields.io/badge/bash-automation-blue" alt="bash">
+</p>
+
+<h1 align="center">🔎 PD_Autopilot - Recon & Scan Toolkit</h1>
+
+<p align="center">
+  <b>Automated security scanning and recon script powered by ProjectDiscovery + RustScan + Nmap</b><br>
+  🔥 Fast. 🧠 Smart. 💥 Deadly.
+</p>
+
+---
+
+## 🎬 Demo
+
+<p align="center">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExazg3amxlbXExa3gyOW82MGxuMThpYm5ib3U5Y2t4cTJoZXh3aXgzbiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/gKXxuB8qf5D2a/giphy.gif" alt="demo" width="700"/>
+</p>
+
+---
 
 ## 📌 Overview
 
-This script automates the process of enumerating subdomains, checking active hosts, scanning for open ports, detecting technologies, finding vulnerabilities, and discovering hidden parameters or endpoints. It integrates various security tools such as Subfinder, Httpx, Naabu, Nuclei, and Katana.
+This Bash script automates reconnaissance for a target domain:  
+From subdomain enumeration ➡ active host discovery ➡ port scanning ➡ technology detection ➡ vulnerability scanning ➡ endpoint discovery.
+
+Integrates multiple tools for a seamless recon-to-scan pipeline.
+
+---
 
 ## ⚡ Features
 
-- Subdomain Enumeration (Subfinder)
-- Active Host Checking (Httpx)
-- Port Scanning (Naabu)
-- Technology Detection (Httpx tech-detect)
-- Vulnerability Scanning (Nuclei)
-- Endpoint & Parameter Discovery (Katana)
-- Notification Support (Notify, optional)
+- 🔍 Subdomain Enumeration (`subfinder`)
+- 🌐 Active Host Checking (`httpx`)
+- 🚪 Port Scanning (`rustscan` + `nmap`)
+- 🧠 Tech Detection (`httpx --tech-detect`)
+- 🚨 Vulnerability Scanning (`nuclei`)
+- 🕸️ Endpoint & JS Parameter Discovery (`katana`)
+- 🛎️ Optional Notifications (`notify`)
 
-## 🛠️ Installation & Requirements
+---
 
-Ensure you install them from official ProjectDiscovery repo:
+## 📦 Installation & Requirements
 
-- [Subfinder](https://github.com/projectdiscovery/subfinder)
-- [Httpx](https://github.com/projectdiscovery/httpx)
-- [Naabu](https://github.com/projectdiscovery/naabu)
-- [Nuclei](https://github.com/projectdiscovery/nuclei)
-- [Katana](https://github.com/projectdiscovery/katana)
-- [Notify](https://github.com/projectdiscovery/notify) (optional)
+✅ Make sure these tools are installed from their official repos:
 
-OR
+| Tool         | Description                       | Link |
+|--------------|-----------------------------------|------|
+| Subfinder    | Fast passive subdomain finder     | [🔗](https://github.com/projectdiscovery/subfinder) |
+| Httpx        | Active probe & tech detect        | [🔗](https://github.com/projectdiscovery/httpx) |
+| RustScan     | Fast port scanner                 | [🔗](https://github.com/RustScan/RustScan) |
+| Nmap         | Deep scan engine after RustScan   | [🔗](https://nmap.org/) |
+| Nuclei       | Template-based vuln scanner       | [🔗](https://github.com/projectdiscovery/nuclei) |
+| Katana       | Endpoint/parameter spider         | [🔗](https://github.com/projectdiscovery/katana) |
+| Notify (opt) | Notification system for alerting  | [🔗](https://github.com/projectdiscovery/notify) |
 
-Read this for automatic installation [INSTALL.md](https://github.com/armanridho/PD_autopilot/blob/main/INSTALL.md)
+📖 Auto install script available in [INSTALL.md](https://github.com/armanridho/PD_autopilot/blob/main/INSTALL.md)
+
+---
 
 ## 🚀 Usage
 
-Copy / Download / Clone this repo
-
-Run the script with:
-- Change inside auto_scanning.sh (yourdomain.com) to domain what you need to scan, then
+1. Clone the repo:
+```bash
+git clone https://github.com/armanridho/PD_autopilot.git
+cd PD_autopilot
 ```
+
+2. Edit the target domain inside auto_scanning.sh:
+
+```bash
+DOMAIN="targetdomain.com"
+```
+
+3. Run the script:
+```bash
 chmod +x auto_scanning.sh
 ./auto_scanning.sh
 ```
-
-## 📂 Output Files
-
-Results will be saved in the scan_results directory:
-
-- subdomains.txt - Enumerated subdomains
-
-- live_subdomains.txt - Active subdomains
-
-- ports.txt - Open ports
-
-- httpx_tech.txt - Technology detection results
-
-- nuclei_results.txt - Vulnerability scan results
-
-- katana_results.txt - Discovered endpoints
-
-## 📜 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🤝 Contributing
-
-Pull requests are welcome! If you find any issues or improvements, feel free to open an issue or contribute directly.
-
-## ⚠️ Disclaimer
-
-This script is intended for educational and security research purposes only. Unauthorized use against targets without explicit permission is illegal.
