@@ -16,7 +16,7 @@
 ## 🎬 Demo
 
 <p align="center">
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExazg3amxlbXExa3gyOW82MGxuMThpYm5ib3U5Y2t4cTJoZXh3aXgzbiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/gKXxuB8qf5D2a/giphy.gif" alt="demo" width="700"/>
+  <img src="https://raw.githubusercontent.com/armanridho/PD_autopilot/refs/heads/main/pd_autopilot.gif" alt="demo" width="700"/>
 </p>
 
 ---
