@@ -79,3 +79,19 @@ DOMAIN="targetdomain.com"
 chmod +x auto_scanning.sh
 ./auto_scanning.sh
 ```
+
+---
+## Directory-tree
+<pre>scan_results/ 
+├── clean_subdomains.txt     # Filtered and deduplicated subdomains from Subfinder 
+├── katana_results.txt       # Discovered endpoints (URLs, parameters) from Katana
+├── live_ips.txt             # Unique resolved IPs from active subdomains 
+├── live_subdomains.txt      # Subdomains that responded (HTTP/HTTPS) from httpx 
+├── nuclei_results.txt       # Vulnerability scan results from Nuclei 
+├── httpx_tech.txt           # Detected technologies (tech stack) from httpx 
+├── scan_summary.txt         # Summary report of all findings and scan metadata 
+├── subdomains.txt           # Raw output from Subfinder before cleaning 
+└── nmap/ 
+     ├── ports_1.2.3.4.txt   # Port scan result for IP 1.2.3.4 using RustScan + Nmap
+     ├── ports_5.6.7.8.txt   # Same for another resolved IP
+     └── ... # Additional files depending on number of IPs
